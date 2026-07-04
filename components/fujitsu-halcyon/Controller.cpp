@@ -1,5 +1,8 @@
 #include "Controller.h"
 
+#include <freertos/FreeRTOS.h>
+#include <freertos/task.h>
+
 #include <algorithm>
 #include <cmath>
 
@@ -230,10 +233,15 @@ void Controller::process_packet(const Packet::Buffer& buffer, bool lastPacketOnW
             }
         }
 
-        Packet::Buffer b = tx_packet.to_buffer();
+        Packet::Buffer b = tx_packet.to_buffer();        
         // TODO Should check have not missed tx window before tx...
         // Need to use RX_TIMEOUT interrupt to get accurate rx timestamp?
         // Can drop lastPacketOnWire check if implemented
+        
+        if (this->tx_delay_ms > 0) {
+            ESP_LOGD(TAG, "TX delay: %u ms", this->tx_delay_ms);
+            vTaskDelay(pdMS_TO_TICKS(this->tx_delay_ms));
+        }
         this->uart_write_bytes(b.data(), b.size());
     }
 

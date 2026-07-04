@@ -64,6 +64,7 @@ CONF_IGNORE_LOCK = "ignore_lock"
 # disable probing entirely with `autoconf: false` for IUs known to misbehave on
 # FeatureRequest. Anything not specified keeps the in-code DefaultFeatures value.
 CONF_AUTOCONF = "autoconf"
+CONF_TX_DELAY_MS = "tx_delay_ms"
 CONF_SUPPORTED_MODES = "supported_modes"
 CONF_SUPPORTED_FAN_MODES = "supported_fan_modes"
 CONF_SUPPORTED_SWING_MODES = "supported_swing_modes"
@@ -119,6 +120,7 @@ CONFIG_SCHEMA = climate.climate_schema(FujitsuHalcyonController).extend(
         cv.Optional(CONF_TEMPERATURE_SENSOR): cv.use_id(sensor.Sensor),
         cv.Optional(CONF_HUMIDITY_SENSOR): cv.use_id(sensor.Sensor),
         cv.Optional(CONF_AUTOCONF): cv.boolean,
+        cv.Optional(CONF_TX_DELAY_MS, default=0): cv.int_range(0, 1000),
         cv.Optional(CONF_SUPPORTED_MODES): cv.ensure_list(cv.one_of(*ALLOWED_MODES, upper=True)),
         cv.Optional(CONF_SUPPORTED_FAN_MODES): cv.ensure_list(cv.one_of(*ALLOWED_FAN_MODES, upper=True)),
         cv.Optional(CONF_SUPPORTED_SWING_MODES): cv.ensure_list(cv.one_of(*ALLOWED_SWING_MODES, upper=True)),
@@ -277,6 +279,7 @@ async def to_code(config: ConfigType) -> None:
     # in-code DefaultFeatures value.
     if CONF_AUTOCONF in config:
         cg.add(var.set_autoconf(config[CONF_AUTOCONF]))
+    cg.add(var.set_tx_delay(config[CONF_TX_DELAY_MS]))
     if CONF_SUPPORTED_MODES in config:
         modes = set(config[CONF_SUPPORTED_MODES])
         cg.add(var.set_supported_modes(

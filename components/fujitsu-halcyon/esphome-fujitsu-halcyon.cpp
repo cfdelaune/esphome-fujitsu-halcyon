@@ -55,6 +55,7 @@ void FujitsuHalcyonController::setup() {
     // setup() runs before loop() so this is safe.
     this->controller->set_features(this->features_override_);
     this->controller->set_autoconf(this->autoconf_);
+    this->controller->set_tx_delay(this->tx_delay_ms_);
 
     this->connected_sensor->publish_state(false);
 

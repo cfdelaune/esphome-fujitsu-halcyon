@@ -76,6 +76,7 @@ class FujitsuHalcyonController : public Component, public climate::Climate, publ
         // Setters mutate features_override_ in place; fields not touched keep the
         // DefaultFeatures value the struct was initialized with.
         void set_autoconf(bool v) { this->autoconf_ = v; }
+        void set_tx_delay(uint32_t ms) { this->tx_delay_ms_ = ms; }
         void set_supported_modes(bool a, bool h, bool f, bool d, bool c) {
             this->features_override_.Mode.Auto = a;
             this->features_override_.Mode.Heat = h;
@@ -109,6 +110,7 @@ class FujitsuHalcyonController : public Component, public climate::Climate, publ
         // Feature negotiation state. Initialized to DefaultFeatures so anything not
         // overridden by YAML keeps the in-code default. Applied to Controller in setup().
         bool autoconf_ = true;
+        uint32_t tx_delay_ms_ = 0;
         fujitsu_general::airstage::h::Features features_override_ = fujitsu_general::airstage::h::DefaultFeatures;
 
     private:

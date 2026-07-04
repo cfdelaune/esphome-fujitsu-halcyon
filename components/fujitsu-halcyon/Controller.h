@@ -125,6 +125,7 @@ class Controller {
         // Config and applies the configured features directly. Useful for IUs known
         // to misbehave on FeatureRequest (e.g. enter a non-recoverable error state).
         void set_autoconf(bool autoconf) { this->autoconf = autoconf; }
+        void set_tx_delay(uint32_t ms) { this->tx_delay_ms = ms; }
 
         void set_current_temperature(float temperature);
         bool set_enabled(bool enabled, bool ignore_lock = false);
@@ -157,6 +158,7 @@ class Controller {
         Callbacks callbacks;
 
         bool autoconf = true;
+        uint32_t tx_delay_ms = 0;
         struct Features features = DefaultFeatures;
         struct Config current_configuration = {};
         struct Config changed_configuration = {};
