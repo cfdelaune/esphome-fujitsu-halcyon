@@ -237,7 +237,7 @@ void Controller::process_packet(const Packet::Buffer& buffer, bool lastPacketOnW
         
         if (this->tx_delay_ms > 0) {
             ESP_LOGD(TAG, "TX delay: %u ms", this->tx_delay_ms);
-            esp_rom_delay_us(this->tx_delay_ms * 1000);
+            delay(this->tx_delay_ms);
         }
         this->uart_write_bytes(b.data(), b.size());
     }
