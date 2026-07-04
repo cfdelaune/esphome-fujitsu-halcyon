@@ -1,8 +1,6 @@
 #include "Controller.h"
 
-#include <freertos/FreeRTOS.h>
-#include <freertos/task.h>
-
+#include <esp_rom_sys.h>
 #include <algorithm>
 #include <cmath>
 
@@ -240,7 +238,7 @@ void Controller::process_packet(const Packet::Buffer& buffer, bool lastPacketOnW
         
         if (this->tx_delay_ms > 0) {
             ESP_LOGD(TAG, "TX delay: %u ms", this->tx_delay_ms);
-            vTaskDelay(pdMS_TO_TICKS(this->tx_delay_ms));
+            esp_rom_delay_us(this->tx_delay_ms * 1000);
         }
         this->uart_write_bytes(b.data(), b.size());
     }
