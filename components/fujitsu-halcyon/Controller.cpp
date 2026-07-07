@@ -6,7 +6,6 @@
 //#include <esp_log.h>
 // Log through esphome instead of standard esp logging
 #include <esphome/core/log.h>
-#include <esphome/core/hal.h>
 using esphome::esp_log_printf_;
 
 namespace fujitsu_general::airstage::h {
@@ -238,7 +237,7 @@ void Controller::process_packet(const Packet::Buffer& buffer, bool lastPacketOnW
         
         if (this->tx_delay_ms > 0) {
             this->tx_pending_buffer = b;
-            this->tx_pending_time_ms = millis() + this->tx_delay_ms;
+            this->tx_pending_time_ms = esphome::millis() + this->tx_delay_ms;
             this->tx_pending = true;
         } else {
             this->uart_write_bytes(b.data(), b.size());
@@ -452,7 +451,7 @@ bool Controller::maintenance(bool ignore_lock) {
 }
 
 void Controller::process_pending_tx() {
-    if (this->tx_pending && millis() >= this->tx_pending_time_ms) {
+    if (this->tx_pending && esphome::millis() >= this->tx_pending_time_ms) {
         ESP_LOGD(TAG, "TX delay: %u ms", this->tx_delay_ms);
         this->uart_write_bytes(this->tx_pending_buffer.data(), this->tx_pending_buffer.size());
         this->tx_pending = false;
