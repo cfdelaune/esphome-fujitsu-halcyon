@@ -160,7 +160,7 @@ class Controller {
 
         bool autoconf = true;
         uint32_t tx_delay_ms = 0;
-        uint32_t tx_pending_time_ms = 0;
+        int64_t tx_pending_time_ms = 0;
         bool tx_pending = false;
         Packet::Buffer tx_pending_buffer;
         struct Features features = DefaultFeatures;
