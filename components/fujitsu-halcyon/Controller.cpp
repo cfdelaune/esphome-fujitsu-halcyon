@@ -6,6 +6,7 @@
 //#include <esp_log.h>
 // Log through esphome instead of standard esp logging
 #include <esphome/core/log.h>
+#include <esphome/core/hal.h>
 using esphome::esp_log_printf_;
 
 namespace fujitsu_general::airstage::h {
