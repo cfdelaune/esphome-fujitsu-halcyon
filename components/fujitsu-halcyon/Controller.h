@@ -108,6 +108,7 @@ class Controller {
         }
 
         void process_uart_data();
+        void process_pending_tx();
         bool is_initialized() const { return this->initialization_stage == InitializationStageEnum::Complete; }
         void reinitialize() { this->set_initialization_stage(InitializationStageEnum::DetectFeatureSupport); }
         InitializationStageEnum get_initialization_stage() const { return this->initialization_stage; }
@@ -159,6 +160,9 @@ class Controller {
 
         bool autoconf = true;
         uint32_t tx_delay_ms = 0;
+        uint32_t tx_pending_time_ms = 0;
+        bool tx_pending = false;
+        Packet::Buffer tx_pending_buffer;
         struct Features features = DefaultFeatures;
         struct Config current_configuration = {};
         struct Config changed_configuration = {};

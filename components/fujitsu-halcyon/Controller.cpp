@@ -236,10 +236,12 @@ void Controller::process_packet(const Packet::Buffer& buffer, bool lastPacketOnW
         // Can drop lastPacketOnWire check if implemented
         
         if (this->tx_delay_ms > 0) {
-            ESP_LOGD(TAG, "TX delay: %u ms", this->tx_delay_ms);
-            delay(this->tx_delay_ms);
+            this->tx_pending_buffer = b;
+            this->tx_pending_time_ms = millis() + this->tx_delay_ms;
+            this->tx_pending = true;
+        } else {
+            this->uart_write_bytes(b.data(), b.size());
         }
-        this->uart_write_bytes(b.data(), b.size());
     }
 
     // Have now (hopefully) transmitted on time so call pending callback
@@ -446,6 +448,14 @@ bool Controller::maintenance(bool ignore_lock) {
     this->changed_configuration.Controller.Maintenance = true;
     this->configuration_changes[SettableFields::Maintenance] = true;
     return true;
+}
+
+void Controller::process_pending_tx() {
+    if (this->tx_pending && millis() >= this->tx_pending_time_ms) {
+        ESP_LOGD(TAG, "TX delay: %u ms", this->tx_delay_ms);
+        this->uart_write_bytes(this->tx_pending_buffer.data(), this->tx_pending_buffer.size());
+        this->tx_pending = false;
+    }
 }
 
 }

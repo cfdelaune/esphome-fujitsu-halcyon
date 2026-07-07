@@ -13,6 +13,7 @@ constexpr std::array ControllerName = { "Primary", "Secondary", "Undocumented" }
 
 void FujitsuHalcyonController::loop() {
     this->controller->process_uart_data();
+    this->controller->process_pending_tx();
 }
 
 void FujitsuHalcyonController::setup() {
