@@ -169,7 +169,8 @@ class Controller {
         std::bitset<SettableFields::MAX> configuration_changes;
         std::queue<struct Function> function_queue;
         bool last_error_flag = false; // TODO handle errors for multiple indoor units...multiple errors per IU?
-
+        bool sent_first_config = false;
+        
         size_t uart_available_bytes();
         void uart_read_bytes(uint8_t *buf, size_t length);
         void uart_write_bytes(const uint8_t *buf, size_t length);

@@ -175,6 +175,11 @@ void Controller::process_packet(const Packet::Buffer& buffer, bool lastPacketOnW
             tx_packet.Config.Controller.Temperature = this->changed_configuration.Controller.Temperature;
             tx_packet.Config.Controller.UseControllerSensor = this->changed_configuration.Controller.UseControllerSensor;
 
+            if (!this->sent_first_config) {
+                tx_packet.Config.Controller.Write = true;
+                this->sent_first_config = true;
+            }
+            
             if (this->configuration_changes.any()) {
                 tx_packet.Config.Controller.Write = true;
 
